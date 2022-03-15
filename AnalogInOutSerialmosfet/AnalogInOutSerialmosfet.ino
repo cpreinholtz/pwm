@@ -28,6 +28,16 @@ const int upPin = 6;
 const int dnPin = 4;//  normally closed buttons, connected to gnd
 
 int sensorValue = 0;        // value read from the pot
+
+const int analogOutPin2 = 3; // Analog output pin that the LED is attached to
+
+
+const int upPin2 = 7;
+const int dnPin2 = 8;//  normally closed buttons, connected to gnd
+
+int sensorValue2 = 0;        // value read from the pot
+
+
 //int outputValue = 0;        // value output to the PWM (analog out)
 
 void setup() {
@@ -36,6 +46,8 @@ void setup() {
 
   pinMode(upPin, INPUT_PULLUP);
   pinMode(dnPin, INPUT_PULLUP);
+  pinMode(upPin2, INPUT_PULLUP);
+  pinMode(dnPin2, INPUT_PULLUP);
 
   TCCR1B = TCCR1B & 0b11111000 | 0x01;
 }
@@ -49,13 +61,22 @@ void loop() {
     sensorValue = sensorValue +1;
     if (sensorValue > 255){ sensorValue = 255;}    
   }
-
+  
+  if (digitalRead(dnPin2)){
+    sensorValue2 = sensorValue2 -1;
+    if (sensorValue2 < 0){ sensorValue2 = 0;}   
+  } else if (digitalRead(upPin2)){
+    sensorValue2 = sensorValue2 +1;
+    if (sensorValue2 > 255){ sensorValue2 = 255;}    
+  }
 
   
   // map it to the range of the analog out:
   //outputValue = map(sensorValue, 0, 1023, 0, 255);
   // change the analog out value:
   analogWrite(analogOutPin, sensorValue);
+  
+  analogWrite(analogOutPin2, sensorValue2);
   
   Serial.print("sensor = ");
   Serial.println(sensorValue);
